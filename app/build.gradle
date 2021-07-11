@@ -1,0 +1,68 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-kapt'
+    id 'kotlin-android'
+}
+kapt {
+    arguments {
+        arg("AROUTER_MODULE_NAME", project.getName())
+    }
+}
+android {
+    compileSdkVersion versions.compileSdkVersion
+    buildToolsVersion versions.buildToolsVersion
+
+    defaultConfig {
+        applicationId "com.cmq.demo"
+        minSdkVersion versions.minSdkVersion
+        targetSdkVersion versions.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    implementation library.androidx.appcompat
+    implementation library.androidx.constraintlayout
+    implementation library.google.material
+
+    implementation library.alibaba.router
+    implementation project(path: ':test-skin')
+    kapt library.alibaba.processor
+
+
+    implementation project(path: ':base')
+    implementation project(path: ':library-method')
+    implementation project(path: ':library-skin')
+    implementation project(path: ':library-av')
+    implementation project(path: ':library-dex')
+    implementation project(path: ':test-dex')
+
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    implementation 'com.aliyun.ams:alicloud-android-hotfix:+'
+}
+repositories {
+    mavenCentral()
+    maven {
+        url "https://maven.aliyun.com/repository/public"
+    }
+}

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.cmq.test.dex">
+<application>
+    <activity android:name=".TestDexMainActivity" android:screenOrientation="portrait"
+        android:label="测试DEX替换"/>
+</application>
+</manifest>

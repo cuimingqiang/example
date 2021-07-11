@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBBFF00</color>
+    <color name="purple_500">#FF62FF00</color>
+    <color name="purple_700">#FF37FF00</color>
+    <color name="teal_200">#FF03FF00</color>
+    <color name="teal_700">#FF01FF00</color>
+    <color name="black">#FFFFFFFF</color>
+    <color name="white">#FF000000</color>
+
+    <color name="font_normal">#333000</color>
+    <color name="font_desc">#666000</color>
+    <color name="click_grey">#20000000</color>
+    <color name="background_container">@android:color/white</color>
+
+    <color name="background">#FFFF0000</color>
+    <color name="button">#FF00FF00</color>
+    <color name="text">#FF330000</color>
+</resources>

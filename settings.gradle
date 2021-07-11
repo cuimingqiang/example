@@ -1,0 +1,10 @@
+include ':test-skin-resource'
+include ':test-skin'
+include ':test-dex'
+include ':library-av'
+include ':library-method'
+include ':library-dex'
+include ':library-skin'
+include ':base'
+include ':app'
+rootProject.name = "example"
