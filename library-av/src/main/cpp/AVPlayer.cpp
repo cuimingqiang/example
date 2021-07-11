@@ -3,3 +3,5 @@
 //
 
 #include "AVPlayer.h"
+#include <jni.h>
+

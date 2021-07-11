@@ -1,6 +1,9 @@
 package com.cmq.demo.app;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.cmq.base.RouteMapping;
+
+import kotlin.annotation.Retention;
 
 public interface RouteConfig {
 
@@ -9,4 +12,7 @@ public interface RouteConfig {
 
     @RouteMapping("/skin/main")
     void startTestSkinActivity();
+
+    @RouteMapping("/test/av")
+    void startTestAvActivity();
 }

@@ -41,10 +41,10 @@ dependencies {
     implementation library.androidx.appcompat
     implementation library.androidx.constraintlayout
     implementation library.google.material
-
-    implementation library.alibaba.router
     implementation project(path: ':library-skin')
     implementation project(path: ':base')
+    implementation library.alibaba.router
+
     kapt library.alibaba.processor
 
 

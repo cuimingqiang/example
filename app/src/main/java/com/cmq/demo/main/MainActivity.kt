@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
                             ParseApk.parse(this@MainActivity.application)
                         },
                         DataItem("音视频", "播放音视频已经直播信息") {
-
+                            RouteRetrofit.getRouteConfig(RouteConfig::class.java).startTestAvActivity()
                         }
                 )
             }

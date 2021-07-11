@@ -7,6 +7,7 @@ ext {
             androidx         : '1.2.0',
             constraintlayout : '2.0.4',
             material         : '1.2.1',
+            ndk :'22.1.7171670'
     ]
 
     library = [
