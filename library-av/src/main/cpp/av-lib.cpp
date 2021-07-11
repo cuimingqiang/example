@@ -29,5 +29,4 @@ Java_com_cmq_av_AVPlayer_nativeInit(JNIEnv *env, jobject thiz) {
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_cmq_av_AVPlayer_nativeDataSource(JNIEnv *env, jobject thiz, jlong ptr, jstring path) {
-
 }
