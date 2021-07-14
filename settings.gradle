@@ -8,3 +8,5 @@ include ':library-skin'
 include ':base'
 include ':app'
 rootProject.name = "example"
+include ':test-av'
+include ':library-player'

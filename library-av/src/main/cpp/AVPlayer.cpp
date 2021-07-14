@@ -5,3 +5,6 @@
 #include "AVPlayer.h"
 #include <jni.h>
 
+void AVPlayer::setDatasource(const char *path) {
+
+}

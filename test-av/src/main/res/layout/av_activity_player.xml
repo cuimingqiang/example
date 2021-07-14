@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/copy"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="生成视频"
+        android:textAlignment="center"
+        android:layout_width="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/play"
+        android:layout_height="80dp"/>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/play"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/copy"
+        android:text="播放视频"
+        android:textAlignment="center"
+        android:layout_width="0dp"
+        android:layout_height="80dp"/>
+    <SurfaceView
+        android:id="@+id/surfaceView"
+        app:layout_constraintTop_toBottomOf="@+id/copy"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

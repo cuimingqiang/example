@@ -45,9 +45,9 @@ class MainActivity : AppCompatActivity() {
                         //AMS核心分析三
                         //hook Instrumentation
                         DataItem("HookActivity启动", "可以启动未注册的Activity") {
-                            ParseApk.parse(this@MainActivity.application)
-                        },
-                        DataItem("音视频", "播放音视频已经直播信息") {
+                       },
+                        DataItem("音视频", "播放音视频") {
+                            Log.i("---","音视频")
                             RouteRetrofit.getRouteConfig(RouteConfig::class.java).startTestAvActivity()
                         }
                 )

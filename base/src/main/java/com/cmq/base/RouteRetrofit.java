@@ -1,5 +1,7 @@
 package com.cmq.base;
 
+import android.util.Log;
+
 import com.alibaba.android.arouter.launcher.ARouter;
 
 import java.lang.reflect.InvocationHandler;
@@ -30,7 +32,6 @@ public class RouteRetrofit {
             @Override
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                 RouteMapping route = method.getAnnotation(RouteMapping.class);
-
                 ARouter.getInstance().build(route.value()).navigation();
                 return null;
             }

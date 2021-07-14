@@ -4,11 +4,11 @@ plugins {
     id 'kotlin-android'
     // id 'com.jakewharton.butterknife'
 }
-kapt {
-    arguments {
-        arg("AROUTER_MODULE_NAME", project.getName())
-    }
-}
+//kapt {
+//    arguments {
+//        arg("AROUTER_MODULE_NAME", project.getName())
+//    }
+//}
 android {
     compileSdkVersion versions.compileSdkVersion
     buildToolsVersion versions.buildToolsVersion
@@ -52,9 +52,9 @@ dependencies {
 
 //    implementation library.alibaba.router
 //    kapt library.alibaba.processor
-    implementation library.alibaba.router
-
-    kapt library.alibaba.processor
+//    implementation library.alibaba.router
+//
+//    kapt library.alibaba.processor
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

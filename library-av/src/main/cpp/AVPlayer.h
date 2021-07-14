@@ -9,6 +9,9 @@
 
 class AVPlayer {
 
+public:
+    void setDatasource(const char * path);
+
 };
 
 
