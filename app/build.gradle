@@ -21,9 +21,9 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        ndk{
-            abiFilter 'armeabi-v7a'
-        }
+//        ndk{
+//            abiFilter 'armeabi-v7a'
+//        }
     }
 
     buildTypes {
@@ -46,13 +46,13 @@ dependencies {
 
     implementation library.alibaba.router
     implementation project(path: ':test-skin')
-    implementation project(path: ':test-av')
     implementation project(path: ':test-dex')
+    implementation project(path: ':library-player')
+    implementation project(path: ':test-av')
     kapt library.alibaba.processor
 
 
     implementation project(path: ':base')
-    implementation project(path: ':library-method')
     implementation project(path: ':library-skin')
     implementation project(path: ':library-dex')
 

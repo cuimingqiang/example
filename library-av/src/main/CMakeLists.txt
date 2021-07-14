@@ -24,15 +24,19 @@ set_target_properties(swresample PROPERTIES IMPORTED_LOCATION
         ${FFmpegSo}/${CMAKE_ANDROID_ARCH_ABI}/libswresample.so)
 set_target_properties(swscale PROPERTIES IMPORTED_LOCATION
         ${FFmpegSo}/${CMAKE_ANDROID_ARCH_ABI}/libswscale.so)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -L${FFmpegSo}/${CMAKE_ANDROID_ARCH_ABI}") #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -L${FFmpegSo}/${CMAKE_ANDROID_ARCH_ABI}") #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 find_library(log-lib log)
 file(GLOB sources cpp/*.cpp)
 add_library(av SHARED ${sources})
 target_link_libraries(av
         log
-        -Wl,--start-group
-        avcodec avfilter avformat avutil swresample swscale
-        -Wl,--end-group
+        avcodec
+        avfilter
+        avformat
+        avutil
+        swresample
+        swscale
         z
         android
         OpenSLES

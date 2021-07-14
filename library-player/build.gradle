@@ -21,9 +21,9 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
-        ndk{
-            abiFilter 'armeabi-v7a'
-        }
+//        ndk{
+//            abiFilter 'armeabi-v7a'
+//        }
     }
 
     externalNativeBuild{

@@ -7,7 +7,6 @@ message("ffmpeg 目录=" ${FFMPEG})
 include_directories(${FFMPEG}/include) # 导入ffmpeg的头文件
 
 set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -L${FFMPEG}/libs/${CMAKE_ANDROID_ARCH_ABI}") # ffmpeg库指定
-
 #set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -L${RTMP}/libs/${CMAKE_ANDROID_ARCH_ABI}") # rtmp库指定
 
 # 批量导入 源文件
@@ -25,7 +24,7 @@ target_link_libraries(
         -Wl,--start-group
         avcodec avfilter avformat avutil swresample swscale
         -Wl,--end-group
-
+        -Wl,-z,notext
         log # 日志库，打印日志用的
         z # libz.so库，是FFmpeg需要用ndk的z库，FFMpeg需要额外支持  libz.so
         #rtmp # rtmp 后面会专门介绍

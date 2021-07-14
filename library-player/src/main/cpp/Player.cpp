@@ -46,7 +46,7 @@ void Player::prepare() {
     LOG_D("视频时长：%d", duration);
 
     AVCodecContext *avCodecContext = nullptr;
-    for (int streamIndex = 0; streamIndex < avFormatContext->nb_streams, streamIndex++) {
+    for (int streamIndex = 0; streamIndex < avFormatContext->nb_streams; streamIndex++) {
         auto stream = avFormatContext->streams[streamIndex];
         auto parameters = stream->codecpar;
         auto codec = avcodec_find_decoder(parameters->codec_id);

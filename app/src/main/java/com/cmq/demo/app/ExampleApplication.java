@@ -1,21 +1,11 @@
 package com.cmq.demo.app;
 
 import android.app.Application;
-import android.os.Environment;
 import android.util.Log;
 
 import com.alibaba.android.arouter.facade.template.ILogger;
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.cmq.dex.DexReplaceManager;
-import com.cmq.method.HotFix;
-import com.cmq.skin.AttrProcessor;
 import com.cmq.skin.SkinManager;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.lang.reflect.Method;
-import java.util.Map;
 
 public class ExampleApplication extends Application {
     @Override
@@ -26,6 +16,7 @@ public class ExampleApplication extends Application {
 //        if (dir.exists())
 //            DexReplaceManager.install(this, dir);
         ARouter.openDebug();
+        ARouter.openLog();
         ARouter.init(this);
         ARouter.setLogger(new ILogger() {
             @Override
@@ -40,22 +31,22 @@ public class ExampleApplication extends Application {
 
             @Override
             public void debug(String tag, String message) {
-
+                Log.d(tag,message);
             }
 
             @Override
             public void info(String tag, String message) {
-
+                Log.i(tag,message);
             }
 
             @Override
             public void warning(String tag, String message) {
-
+                Log.w(tag,message);
             }
 
             @Override
             public void error(String tag, String message) {
-
+                Log.e(tag,message);
             }
 
             @Override
@@ -65,12 +56,12 @@ public class ExampleApplication extends Application {
 
             @Override
             public void monitor(String message) {
-
+                Log.d("monitor",message);
             }
 
             @Override
             public boolean isMonitorMode() {
-                return false;
+                return true;
             }
 
             @Override
@@ -81,15 +72,6 @@ public class ExampleApplication extends Application {
         SkinManager.init(this, map -> {
 
         });
-        try {
-            Method method = getClass().getDeclaredMethod("onCreate");
-            Method onCreate = getClass().getSuperclass().getDeclaredMethod("onCreate");
-
-
-            HotFix.fixMethod(method,onCreate);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
 
     }
 }

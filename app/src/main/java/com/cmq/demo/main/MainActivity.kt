@@ -25,31 +25,39 @@ class MainActivity : AppCompatActivity() {
         bind<RecyclerView>(R.id.recyclerView).value.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             val padding = 1.dp
-            addItemDecoration(object :RecyclerView.ItemDecoration(){
-                override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
-                    outRect.set(0,0,0,padding)
+            addItemDecoration(object : RecyclerView.ItemDecoration() {
+                override fun getItemOffsets(
+                    outRect: Rect,
+                    view: View,
+                    parent: RecyclerView,
+                    state: RecyclerView.State
+                ) {
+                    outRect.set(0, 0, 0, padding)
                 }
             })
             adapter = Adapter().apply {
                 data = arrayListOf(
-                        DataItem("换肤", "可以更换主题皮肤") {
-                            RouteRetrofit.getRouteConfig(RouteConfig::class.java).startTestSkinActivity()
-                        },
-                        DataItem("DEX替换", "冷修复") {
-                            RouteRetrofit.getRouteConfig(RouteConfig::class.java).startTestDexActivity()
-                        },
-                        DataItem("方法替换", "无需重启,直接替换方法") {
-                            val theme = resources.newTheme().apply { applyStyle(R.style.Theme_Example,true) }
+                    DataItem("换肤", "可以更换主题皮肤") {
+                        RouteRetrofit.getRouteConfig(RouteConfig::class.java)
+                            .startTestSkinActivity()
+                    },
+                    DataItem("DEX替换", "冷修复") {
+                        RouteRetrofit.getRouteConfig(RouteConfig::class.java).startTestDexActivity()
+                    },
+                    DataItem("方法替换", "无需重启,直接替换方法") {
+                        val theme =
+                            resources.newTheme().apply { applyStyle(R.style.Theme_Example, true) }
 
-                        },
-                        //AMS核心分析三
-                        //hook Instrumentation
-                        DataItem("HookActivity启动", "可以启动未注册的Activity") {
-                       },
-                        DataItem("音视频", "播放音视频") {
-                            Log.i("---","音视频")
-                            RouteRetrofit.getRouteConfig(RouteConfig::class.java).startTestAvActivity()
-                        }
+                    },
+                    //AMS核心分析三
+                    //hook Instrumentation
+                    DataItem("HookActivity启动", "可以启动未注册的Activity") {
+
+                    },
+                    DataItem("音视频", "播放音视频") {
+                        Log.i("---", "音视频")
+                        RouteRetrofit.getRouteConfig(RouteConfig::class.java).startTestAvActivity()
+                    }
                 )
             }
         }
@@ -57,11 +65,11 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-        if(ev?.action == MotionEvent.ACTION_UP){
-           var t = ViewGroup::class.java.getDeclaredField("mFirstTouchTarget") as Field
+        if (ev?.action == MotionEvent.ACTION_UP) {
+            var t = ViewGroup::class.java.getDeclaredField("mFirstTouchTarget") as Field
             t.isAccessible = true
-           var value = t.get(window.decorView)
-           var child = value.javaClass.getDeclaredField("child") as Field
+            var value = t.get(window.decorView)
+            var child = value.javaClass.getDeclaredField("child") as Field
 
             println(child.get(value).toString())
         }

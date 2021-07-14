@@ -12,7 +12,7 @@ public class AVPlayer {
         System.loadLibrary("av");
     }
 
-    private long mNativePtr;
+    private final long mNativePtr;
 
     public AVPlayer() {
         mNativePtr = nativeInit();
