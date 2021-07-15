@@ -6,25 +6,28 @@
 #define EXAMPLE_PLAYER_H
 
 #include <jni.h>
-#include "JavaHolder.h"
+#include "JavaPlayerHolder.h"
 #include "VideoChannel.h"
 
 extern "C" {
 #include <libavformat/avformat.h>
 #include <libavutil/time.h>
+#include <libswscale/swscale.h>
+#include <libavutil/avutil.h>
+#include <libavutil/imgutils.h>
 };
 
 class Player {
 private:
     //java层player对象
-    JavaHolder *holder;
+    JavaPlayerHolder *holder;
     char *datasource;
     AVFormatContext *avFormatContext = nullptr;
     //时长
     int duration;
     VideoChannel * videoChannel;
 public:
-    Player(JavaHolder *holder);
+    Player(JavaPlayerHolder *holder);
 
     ~Player();
 

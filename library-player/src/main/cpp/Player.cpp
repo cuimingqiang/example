@@ -12,7 +12,7 @@ Player::~Player() {
     if (holder) delete holder;
 }
 
-Player::Player(JavaHolder *holder) {
+Player::Player(JavaPlayerHolder *holder) {
     this->holder = holder;
 }
 
@@ -87,6 +87,11 @@ void Player::prepare() {
                                             (int) av_q2d(fps));
         }
     }
+    if (!videoChannel) {
+        if (avCodecContext)avcodec_free_context(&avCodecContext);
+        avformat_close_input(&avFormatContext);
+    }
+    holder->onPrepare();
 }
 
 

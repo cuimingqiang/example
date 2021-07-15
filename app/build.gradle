@@ -21,9 +21,9 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-//        ndk{
-//            abiFilter 'armeabi-v7a'
-//        }
+        ndk{
+            abiFilter 'armeabi-v7a'
+        }
     }
 
     buildTypes {

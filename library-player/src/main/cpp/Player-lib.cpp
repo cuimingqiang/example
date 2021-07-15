@@ -1,10 +1,10 @@
+//
+// Created by cuimingqiang on 2021/7/15.
+//
 #include <jni.h>
 #include "util.h"
 #include "Player.h"
-//
-// Created by cuimingqiang on 2021/7/14.
-//
-
+#include "JavaPlayerHolder.h"
 extern "C" {
 #include <libavutil/avutil.h>
 }
@@ -30,7 +30,8 @@ extern "C"
 JNIEXPORT jlong JNICALL
 Java_com_cmq_player_AVPlayer_nativeInit(JNIEnv *env, jobject thiz) {
     auto javaPlayer = env->NewWeakGlobalRef(thiz);
-    auto player = new Player(new JavaHolder(vm,env,javaPlayer));
+    auto holder = new JavaPlayerHolder(vm,env,javaPlayer);
+    auto player = new Player(holder);
     return reinterpret_cast<jlong>(player);
 }
 
@@ -48,4 +49,11 @@ JNIEXPORT void JNICALL
 Java_com_cmq_player_AVPlayer_nativePrepare(JNIEnv *env, jobject thiz, jlong ptr) {
     auto player = reinterpret_cast<Player *>(ptr);
     player->prepare();
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_cmq_player_AVPlayer_nativeSetSurfaceView(JNIEnv *env, jobject thiz, jlong ptr,
+                                                  jobject surface) {
+
 }

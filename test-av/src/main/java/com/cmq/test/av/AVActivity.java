@@ -57,8 +57,10 @@ public class AVActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 File file = new File(getCacheDir(), "test.mp4");
-                if (file.exists())
+                if (file.exists()) {
                     player.setDatasource(file.getPath());
+                    player.prepare();
+                }
             }
         });
 

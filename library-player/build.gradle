@@ -21,14 +21,21 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
-//        ndk{
-//            abiFilter 'armeabi-v7a'
-//        }
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+                abiFilters "armeabi-v7a" // CMakeLists.txt 指定编译的是此平台
+            }
+        }
+        ndk{
+            abiFilter 'armeabi-v7a'
+        }
     }
 
     externalNativeBuild{
         cmake {
-            path "src/main/CMakeLists.txt"
+            path "src/main/cpp/CMakeLists.txt"
+            version "3.10.2"
         }
     }
 

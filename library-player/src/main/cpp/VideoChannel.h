@@ -16,7 +16,7 @@ class VideoChannel : Channel{
 private:
     int fps;
 public:
-    VideoChannel(int streamIndex, AVCodecContext *context, AVRational base,ChannelType type, JavaHolder *holder,int fps);
+    VideoChannel(int streamIndex, AVCodecContext *context, AVRational base,ChannelType type, JavaPlayerHolder *holder,int fps);
 };
 
 

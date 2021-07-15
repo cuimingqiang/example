@@ -5,7 +5,7 @@
 #include "VideoChannel.h"
 
 VideoChannel::VideoChannel(int streamIndex, AVCodecContext *context, AVRational base,ChannelType type,
-                           JavaHolder *holder, int fps) : Channel(streamIndex, context, base,type,
+                           JavaPlayerHolder *holder, int fps) : Channel(streamIndex, context, base,type,
                                                                   holder), fps(fps) {
 
 }

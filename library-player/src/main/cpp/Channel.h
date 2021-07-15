@@ -7,8 +7,12 @@
 
 #include "ConcurrentQueue.h"
 
-#include "ffmpeg/include/libavcodec/avcodec.h"
-#include "JavaHolder.h"
+#include "JavaPlayerHolder.h"
+
+extern "C"{
+#include <libavcodec/avcodec.h>
+#include <libavutil/time.h>
+};
 
 enum ChannelType{
     LIVE,
@@ -23,9 +27,9 @@ protected:
     AVCodecContext *avCodecContext;
     AVRational timeBase;
     ChannelType type;
-    JavaHolder *holder;
+    JavaPlayerHolder *holder;
 public:
-    Channel(int streamIndex, AVCodecContext *context, AVRational base, ChannelType type,JavaHolder *holder)
+    Channel(int streamIndex, AVCodecContext *context, AVRational base, ChannelType type,JavaPlayerHolder *holder)
             : streamIndex(streamIndex),
             type(type),
               avCodecContext(context), timeBase(base), holder(holder) {
