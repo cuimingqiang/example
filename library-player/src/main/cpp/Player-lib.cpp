@@ -5,6 +5,7 @@
 #include "util.h"
 #include "Player.h"
 #include "JavaPlayerHolder.h"
+
 extern "C" {
 #include <libavutil/avutil.h>
 }
@@ -55,5 +56,29 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_cmq_player_AVPlayer_nativeSetSurfaceView(JNIEnv *env, jobject thiz, jlong ptr,
                                                   jobject surface) {
+    LOG_D("----原来我根本不会被调用");
+    auto player = reinterpret_cast<Player *>(ptr);
+    player->setWindow(env,surface);
+}
 
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_cmq_player_AVPlayer_nativeStart(JNIEnv *env, jobject thiz, jlong ptr) {
+    auto player = reinterpret_cast<Player *>(ptr);
+    LOG_D("---nativeStart");
+    player->start();
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_cmq_player_AVPlayer_nativeStop(JNIEnv *env, jobject thiz, jlong ptr) {
+    auto player = reinterpret_cast<Player *>(ptr);
+    player->stop();
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_cmq_player_AVPlayer_nativeRelease(JNIEnv *env, jobject thiz, jlong ptr) {
+    auto player = reinterpret_cast<Player *>(ptr);
+    delete player;
 }

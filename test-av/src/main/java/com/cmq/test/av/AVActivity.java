@@ -53,17 +53,29 @@ public class AVActivity extends BaseActivity {
             }
         });
         SurfaceView surfaceView = findViewById(R.id.surfaceView);
+        player.setSurfaceView(surfaceView);
         findViewById(R.id.play).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 File file = new File(getCacheDir(), "test.mp4");
                 if (file.exists()) {
                     player.setDatasource(file.getPath());
+                    player.setOnPreparedListener(new AVPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared() {
+                            player.start();
+                        }
+                    });
+
                     player.prepare();
                 }
             }
         });
 
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }

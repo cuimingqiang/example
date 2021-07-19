@@ -12,18 +12,29 @@ public class AVPlayer implements SurfaceHolder.Callback {
         System.loadLibrary("player");
     }
 
+    public interface OnPreparedListener {
+        void onPrepared();
+    }
+
     private long mNativePtr;
     private SurfaceHolder surfaceHolder;
+    private OnPreparedListener preparedListener;
+
     public AVPlayer() {
         mNativePtr = nativeInit();
+    }
+
+    public void setOnPreparedListener(OnPreparedListener preparedListener) {
+        this.preparedListener = preparedListener;
     }
 
     public void setDatasource(String path) {
         nativeDataSource(mNativePtr, path);
     }
 
-    public void setSurfaceView(SurfaceView surfaceView){
-        if(surfaceHolder!=null){
+    public void setSurfaceView(SurfaceView surfaceView) {
+        Log.i("-----player","setSurfaceView");
+        if (surfaceHolder != null) {
             surfaceHolder.removeCallback(this);
         }
         surfaceHolder = surfaceView.getHolder();
@@ -32,12 +43,13 @@ public class AVPlayer implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
-
+        Log.i("-----player","surfaceCreated");
     }
 
     @Override
     public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
-        nativeSetSurfaceView(mNativePtr,holder.getSurface());
+        Log.i("----player", "surface == " + (holder.getSurface() == null));
+        nativeSetSurfaceView(mNativePtr, holder.getSurface());
     }
 
     @Override
@@ -45,12 +57,25 @@ public class AVPlayer implements SurfaceHolder.Callback {
 
     }
 
+    public void start() {
+        nativeStart(mNativePtr);
+    }
+
+    public void stop() {
+        nativeStop(mNativePtr);
+    }
+
+    public void release() {
+        nativeRelease(mNativePtr);
+    }
+
     public void prepare() {
         nativePrepare(mNativePtr);
     }
 
-    private void onPrepare(){
-        Log.i("-----player","onPrepare");
+    private void onPrepare() {
+        Log.i("-----player", "onPrepare");
+        if (preparedListener != null) preparedListener.onPrepared();
     }
 
     private void onError(int code) {
@@ -64,4 +89,10 @@ public class AVPlayer implements SurfaceHolder.Callback {
     private native void nativePrepare(long ptr);
 
     private native void nativeSetSurfaceView(long ptr, Surface surface);
+
+    private native void nativeStart(long ptr);
+
+    private native void nativeStop(long ptr);
+
+    private native void nativeRelease(long ptr);
 }

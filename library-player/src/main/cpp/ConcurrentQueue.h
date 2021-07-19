@@ -5,6 +5,7 @@
 #ifndef EXAMPLE_CONCURRENTQUEUE_H
 #define EXAMPLE_CONCURRENTQUEUE_H
 
+#include "util.h"
 #include <queue>
 
 using namespace std;
@@ -32,9 +33,27 @@ public:
 
     void produce(T data);
 
-    T consume();
+    int consume(T &data);
+
+    int size(){
+        return queue.size();
+    }
+
+    void clear();
 };
 
+template<typename T>
+void ConcurrentQueue<T>::clear(){
+    pthread_mutex_lock(&mutex);
+
+    while (!queue.empty()){
+        T value = queue.front();
+        releaseProvider(value);
+        queue.pop();
+    }
+
+    pthread_mutex_unlock(&mutex);
+}
 
 template<typename T>
 ConcurrentQueue<T>::ConcurrentQueue() {
@@ -51,29 +70,31 @@ ConcurrentQueue<T>::~ConcurrentQueue() {
 
 template<typename T>
 void ConcurrentQueue<T>::produce(T data) {
+
     pthread_mutex_lock(&mutex);
     if (isWork) {
         queue.push(data);
         pthread_cond_signal(&cond);
     } else {//释放数据
-        if (releaseProvider)releaseProvider(data);
+        if (releaseProvider)releaseProvider(&data);
     }
     pthread_mutex_unlock(&mutex);
 }
 
 template<typename T>
-T ConcurrentQueue<T>::consume() {
+int ConcurrentQueue<T>::consume(T &data) {
     pthread_mutex_lock(&mutex);
     while (isWork && queue.empty()) {
         pthread_cond_wait(&cond, &mutex);
     }
+    int ret = -1;
     if (!queue.empty()) {
-        T data = queue.front();
+        data = queue.front();
         queue.pop();
-        return data;
+        ret = 0;
     }
     pthread_mutex_unlock(&mutex);
-    return nullptr;
+    return ret;
 }
 
 template<typename T>

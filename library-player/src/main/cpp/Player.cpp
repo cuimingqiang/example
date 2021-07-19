@@ -7,12 +7,13 @@
 
 
 Player::~Player() {
-    if (datasource)
-        delete datasource;
-    if (holder) delete holder;
+    delete datasource;
+    delete holder;
+    delete videoChannel;
+    delete audioChannel;
 }
 
-Player::Player(JavaPlayerHolder *holder) {
+Player::Player(JavaPlayerHolder *holder) : windowWidth(0), windowHeight(0) {
     this->holder = holder;
 }
 
@@ -21,7 +22,17 @@ void Player::setDatasource(const char *path) {
     strcpy(datasource, path);
 }
 
+void *prepareFFmpegContext(void *st) {
+    auto p = static_cast<Player *>(st);
+    p->prepareDatasource();
+    return nullptr;
+}
+
 void Player::prepare() {
+    pthread_create(&prepareThread, nullptr, prepareFFmpegContext, this);
+}
+
+void Player::prepareDatasource() {
     avFormatContext = avformat_alloc_context();
 
     AVDictionary *dictionary = nullptr;
@@ -77,7 +88,8 @@ void Player::prepare() {
         }
         auto time_base = stream->time_base;
         if (parameters->codec_type == AVMEDIA_TYPE_AUDIO) {//音频
-
+            audioChannel = new AudioChannel(streamIndex, avCodecContext, time_base,
+                                            duration == 0 ? LIVE : VIDEO, holder);
         } else if (parameters->codec_type == AVMEDIA_TYPE_VIDEO) {//视频
             if (stream->disposition & AV_DISPOSITION_ATTACHED_PIC)//封面
                 continue;
@@ -85,6 +97,7 @@ void Player::prepare() {
             videoChannel = new VideoChannel(streamIndex, avCodecContext, time_base,
                                             duration == 0 ? LIVE : VIDEO, holder,
                                             (int) av_q2d(fps));
+            videoChannel->setRender(this);
         }
     }
     if (!videoChannel) {
@@ -92,6 +105,97 @@ void Player::prepare() {
         avformat_close_input(&avFormatContext);
     }
     holder->onPrepare();
+}
+
+int Player::renderHeight() {
+    return this->windowHeight;
+}
+
+int Player::renderWidth() {
+    return this->windowWidth;
+}
+
+void Player::render(uint8_t *src_data, int scaleWidth, int scaleHeight, int width, int height,
+                    int lineSize) {
+    pthread_mutex_lock(&windowMutex);
+    // LOG_D("----render w = %d ,h = %d", width, height);
+    int top = (height - scaleHeight) / 2;
+    if (window) {
+        ANativeWindow_setBuffersGeometry(window, width, height, WINDOW_FORMAT_RGBA_8888);
+        ANativeWindow_Buffer buffer;
+        if (ANativeWindow_lock(window, &buffer, nullptr)) {//非0 失败
+            ANativeWindow_release(window);
+            window = nullptr;
+        } else {
+            auto dst_data = static_cast<uint8_t *>(buffer.bits);
+            int dst_lineSize = buffer.stride * 4;
+            for (int i = 0; i < scaleHeight; i++) {
+                memcpy(dst_data + (i + top) * dst_lineSize, src_data + i * lineSize, dst_lineSize);
+            }
+            ANativeWindow_unlockAndPost(window);
+        }
+    }
+    pthread_mutex_unlock(&windowMutex);
+}
+
+void Player::setWindow(JNIEnv *env, jobject surface) {
+    pthread_mutex_lock(&windowMutex);
+    if (window) {
+        ANativeWindow_release(window);
+        window = nullptr;
+    }
+    window = ANativeWindow_fromSurface(env, surface);
+    this->windowWidth = ANativeWindow_getWidth(window);
+    this->windowHeight = ANativeWindow_getHeight(window);
+    LOG_D("----window w = %d ,h = %d", windowWidth, windowHeight);
+    pthread_mutex_unlock(&windowMutex);
+}
+
+void *parseAVPackets(void *st) {
+    auto p = static_cast<Player *>(st);
+    p->parseDatasource();
+    return nullptr;
+}
+
+void Player::start() {
+    state = play;
+    if (videoChannel)videoChannel->start();
+    pthread_create(&parseThread, nullptr, parseAVPackets, this);
+}
+
+void Player::parseDatasource() {
+    while (state == play) {
+        //如果packet缓存过大，先停一下
+        if (videoChannel && !videoChannel->canPushPackets()) {
+            av_usleep(10 * 1000);
+            continue;
+        }
+        auto packet = av_packet_alloc();
+
+        int res = av_read_frame(avFormatContext, packet);
+        if (!res) {
+            if (videoChannel && videoChannel->acceptStream(packet->stream_index)) {
+                videoChannel->producePacket(packet);
+            } else {
+                Channel::releasePacket(&packet);
+            }
+        } else if (res == AVERROR_EOF) {//播放完成
+            state = over;
+            Channel::releasePacket(&packet);
+            if (videoChannel->emptyPackets())break;
+        } else {//未知错误
+            state = error;
+            Channel::releasePacket(&packet);
+            break;
+        }
+    }
+    if (videoChannel)videoChannel->stop();
+    if (audioChannel)audioChannel->stop();
+}
+
+void Player::stop() {
+    if (videoChannel)videoChannel->stop();
+    if (audioChannel)audioChannel->stop();
 }
 
 

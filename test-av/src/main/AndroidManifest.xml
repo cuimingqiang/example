@@ -2,6 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cmq.test.av">
     <application>
-        <activity android:name=".AVActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".AVActivity"/>
     </application>
 </manifest>

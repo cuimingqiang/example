@@ -8,7 +8,8 @@
 #include <jni.h>
 #include "JavaPlayerHolder.h"
 #include "VideoChannel.h"
-
+#include "AudioChannel.h"
+#include <android/native_window_jni.h>
 extern "C" {
 #include <libavformat/avformat.h>
 #include <libavutil/time.h>
@@ -17,7 +18,11 @@ extern "C" {
 #include <libavutil/imgutils.h>
 };
 
-class Player {
+enum PlayState{
+    init,play,pause,over,error
+};
+
+class Player : public RenderVideo{
 private:
     //java层player对象
     JavaPlayerHolder *holder;
@@ -25,7 +30,18 @@ private:
     AVFormatContext *avFormatContext = nullptr;
     //时长
     int duration;
+    ANativeWindow* window = nullptr;
     VideoChannel * videoChannel;
+    AudioChannel * audioChannel;
+    pthread_mutex_t windowMutex = PTHREAD_MUTEX_INITIALIZER;
+    PlayState state = init;
+
+    pthread_t prepareThread;
+    pthread_t parseThread;
+
+    int windowWidth;
+    int windowHeight;
+
 public:
     Player(JavaPlayerHolder *holder);
 
@@ -35,6 +51,19 @@ public:
 
     void prepare();
 
+    void start();
+
+    void stop();
+
+    void setWindow(JNIEnv *env,jobject surface );
+
+    void render(uint8_t *src_data,int scaleWidth,int scaleHeight ,int width, int height, int lineSize) override;
+
+    int renderHeight() override;
+    int renderWidth() override;
+public:
+    void prepareDatasource();
+    void parseDatasource();
 
 };
 
