@@ -56,6 +56,7 @@ public:
     virtual bool emptyPackets();
     virtual bool canPushPackets();
     virtual bool canPushFrame();
+
     virtual void producePacket(AVPacket * packet);
     virtual void start();
     virtual void stop();

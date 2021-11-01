@@ -75,6 +75,12 @@ public class AVActivity extends BaseActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        player.release();
+        super.onDestroy();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
     }

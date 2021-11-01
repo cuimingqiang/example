@@ -29,15 +29,16 @@ void VideoChannel::play() {
                    1);
     int width = avCodecContext->width;
     int height = avCodecContext->height;
-    LOG_D("----video w = %d ,h = %d", width,height);
+    LOG_D("----video w = %d ,h = %d", width, height);
     this->renderHeight = render->renderHeight();
     this->renderWidth = render->renderWidth();
     SwsContext *sws_ctx = nullptr;
 
     width = renderWidth;
-    height = renderHeight * width / avCodecContext->width;
-    LOG_D("----video compute w = %d ,h = %d", width,height);
-    int scaleHeight = avCodecContext->height * width / avCodecContext->width ;//height * avCodecContext->height / renderHeight;
+    height = renderHeight;
+    LOG_D("----video compute w = %d ,h = %d", width, height);
+    int scaleHeight = avCodecContext->height * width /
+                      avCodecContext->width;//height * avCodecContext->height / renderHeight;
     LOG_D("----video w = %d ,h = %d, sh = %d", width, height, scaleHeight);
     sws_ctx = sws_getContext(avCodecContext->width, avCodecContext->height,
                              avCodecContext->pix_fmt,
@@ -49,18 +50,23 @@ void VideoChannel::play() {
         if (!isPlay)break;
         if (ret)continue;//非0 标识失败
         sws_scale(sws_ctx, frame->data, frame->linesize, 0, avCodecContext->height, rgba, rgbaLine);
-//       double extra_delay = frame->repeat_pict / (2.0 * fps);
-//       double fps_delay = 1.0 / fps;
-//       double real_delay = fps_delay + extra_delay;
-        render->render(rgba[0], width, scaleHeight, width, height, rgbaLine[0]);
+        double extra_delay = frame->repeat_pict / (2.0 * fps);
+        double fps_delay = 1.0 / fps;
+        double real_delay = fps_delay + extra_delay;
+        double video_time = frame->best_effort_timestamp * av_q2d(timeBase);
         av_frame_unref(frame);
         releaseFrame(&frame);
+        if(render->syncAudio(real_delay, video_time))continue;
+        render->render(rgba[0], width, scaleHeight, width, height, rgbaLine[0]);
+
     }
     av_frame_unref(frame); // 减1 = 0 释放成员指向的堆区
     releaseFrame(&frame); // 释放AVFrame * 本身的堆区空间
     isPlay = false;
     av_free(&rgba[0]);
     sws_freeContext(sws_ctx);
+}
 
-
+void VideoChannel::dropFrame() {
+    frames.dropFirst();
 }

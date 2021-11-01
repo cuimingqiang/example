@@ -27,7 +27,7 @@ target_link_libraries(
 
         log # 日志库，打印日志用的
         z # libz.so库，是FFmpeg需要用ndk的z库，FFMpeg需要额外支持  libz.so
-        rtmp # rtmp 后面会专门介绍
-        android # android 后面会专门介绍，目前先要明白的是 ANativeWindow 用来渲染画面的 == Surface对象
-        OpenSLES # OpenSLES 后面会专门介绍，目前先要明白的是 OpenSLES 用来播放声音的-特别是在native层播放（最快的）
+        rtmp #
+        android
+        OpenSLES
 )

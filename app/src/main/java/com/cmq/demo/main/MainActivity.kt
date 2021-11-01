@@ -14,7 +14,10 @@ import com.cmq.base.bind
 import com.cmq.base.dp
 import com.cmq.demo.R
 import com.cmq.demo.app.RouteConfig
+import com.cmq.method.Test
 import java.lang.reflect.Field
+import java.util.concurrent.locks.LockSupport
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
@@ -61,7 +64,9 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
+        Test.print()
     }
+
 
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {

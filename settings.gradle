@@ -10,3 +10,4 @@ include ':app'
 rootProject.name = "example"
 include ':test-av'
 include ':library-player'
+include ':library-asm'

@@ -4,17 +4,19 @@
 
 #ifndef EXAMPLE_VIDEOCHANNEL_H
 #define EXAMPLE_VIDEOCHANNEL_H
+
+#include "Channel.h"
+
 extern "C" {
 #include <libswscale/swscale.h>
 #include <libavutil/avutil.h>
 #include <libavutil/imgutils.h>
 };
 
-#include "Channel.h"
-
 class RenderVideo {
 public:
     virtual void render(uint8_t *src_data,int scaleWidth,int scaleHeight ,int width, int height, int ineSize) = 0;
+    virtual bool syncAudio(double delay,double videoTime) = 0;
     virtual int renderWidth() = 0;
     virtual int renderHeight() = 0;
 };
@@ -32,7 +34,7 @@ public:
     ~VideoChannel();
 
     void setRender(RenderVideo *render);
-
+    void dropFrame();
     void play() override;
 };
 

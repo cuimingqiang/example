@@ -158,8 +158,10 @@ void *parseAVPackets(void *st) {
 }
 
 void Player::start() {
+    if (state == play)return;
     state = play;
     if (videoChannel)videoChannel->start();
+    if (audioChannel)audioChannel->start();
     pthread_create(&parseThread, nullptr, parseAVPackets, this);
 }
 
@@ -176,13 +178,15 @@ void Player::parseDatasource() {
         if (!res) {
             if (videoChannel && videoChannel->acceptStream(packet->stream_index)) {
                 videoChannel->producePacket(packet);
+            } else if (audioChannel && audioChannel->acceptStream(packet->stream_index)) {
+                audioChannel->producePacket(packet);
             } else {
                 Channel::releasePacket(&packet);
             }
         } else if (res == AVERROR_EOF) {//播放完成
             state = over;
             Channel::releasePacket(&packet);
-            if (videoChannel->emptyPackets())break;
+            if (videoChannel->emptyPackets() && audioChannel->emptyPackets())break;
         } else {//未知错误
             state = error;
             Channel::releasePacket(&packet);
@@ -194,10 +198,36 @@ void Player::parseDatasource() {
 }
 
 void Player::stop() {
+    if (state == pause)return;
+    state = pause;
     if (videoChannel)videoChannel->stop();
     if (audioChannel)audioChannel->stop();
 }
 
+//回调再视频播放线程
+bool Player::syncAudio(double delay, double videoTime) {
+    if (audioChannel) {
+        double audioTime = audioChannel->getAudioTime();
+        double diff = videoTime - audioTime;
+        if (diff > 0) {
+            // 视频时间 > 音频时间： 要等音频，所以控制视频播放慢一点（等音频） 【睡眠】
+            if (diff > 1) {
+                av_usleep((delay * 2) * 1000000);
+            } else {   // 说明：0~1之间：音频与视频差距不大，所以可以那（当前帧实际延时时间 + 音视频差值）
+                av_usleep((delay + diff) * 1000000); // 单位是微妙：所以 * 1000000
+            }
+        } else if (diff < 0) {
+            if (fabs(diff) <= 0.05) { // fabs对负数的操作（对浮点数取绝对值）
+                // 多线程（安全 同步丢包）
+                //videoChannel..sync();
+                videoChannel->dropFrame();
+                return true;
+                // 丢完取下一个包
+            }
+        }
+    }
+    return false;
+}
 
 
 

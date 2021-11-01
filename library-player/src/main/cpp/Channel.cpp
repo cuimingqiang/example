@@ -17,6 +17,7 @@ void *taskPlay(void *args) {
 }
 
 void Channel::start() {
+    if (isPlay)return;
     isPlay = true;
     packets.startWork();
     frames.startWork();
@@ -25,6 +26,7 @@ void Channel::start() {
 }
 
 void Channel::stop() {
+    if(!isPlay)return;
     pthread_join(playThread, nullptr);
     pthread_join(decodeThread, nullptr);
     isPlay = false;

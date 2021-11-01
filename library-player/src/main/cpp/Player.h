@@ -58,7 +58,7 @@ public:
     void setWindow(JNIEnv *env,jobject surface );
 
     void render(uint8_t *src_data,int scaleWidth,int scaleHeight ,int width, int height, int lineSize) override;
-
+    bool syncAudio(double delay, double videoTime) override;
     int renderHeight() override;
     int renderWidth() override;
 public:

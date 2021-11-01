@@ -49,6 +49,7 @@ dependencies {
     implementation project(path: ':test-dex')
     implementation project(path: ':library-player')
     implementation project(path: ':test-av')
+    implementation project(path: ':library-method')
     kapt library.alibaba.processor
 
 
@@ -59,7 +60,7 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    implementation "androidx.core:core-ktx:+"
+    implementation "androidx.core:core-ktx:1.6.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
    // implementation 'com.aliyun.ams:alicloud-android-hotfix:+'

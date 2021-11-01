@@ -35,6 +35,8 @@ public:
 
     int consume(T &data);
 
+    void dropFirst();
+
     int size(){
         return queue.size();
     }
@@ -48,7 +50,7 @@ void ConcurrentQueue<T>::clear(){
 
     while (!queue.empty()){
         T value = queue.front();
-        releaseProvider(value);
+        releaseProvider(&value);
         queue.pop();
     }
 
@@ -60,6 +62,17 @@ ConcurrentQueue<T>::ConcurrentQueue() {
     pthread_mutex_init(&mutex, 0);
     pthread_cond_init(&cond, 0);
     isWork = true;
+}
+
+template<typename T>
+void ConcurrentQueue<T>::dropFirst() {
+    pthread_mutex_lock(&mutex);
+    if(!queue.empty()){
+        T value = queue.front();
+        releaseProvider(&value);
+        queue.pop();
+    }
+    pthread_mutex_unlock(&mutex);
 }
 
 template<typename T>
